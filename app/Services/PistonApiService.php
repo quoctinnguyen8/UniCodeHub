@@ -1,8 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Common\Enums\LanguageEnum;
 use Illuminate\Support\Facades\Http;
-
 class PistonApiService
 {
     const EXECUTE_ENDPOINT = '/execute';
@@ -16,6 +16,8 @@ class PistonApiService
 
     function execute($sourceCode, $language)
     {
+        // chuyển ngôn ngữ về dạng chuẩn
+        $language = LanguageEnum::from($language)->getLanguage();
         // tạo json để gửi lên api
         $data = [
             'language' => $language,
