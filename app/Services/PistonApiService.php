@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Common\Enums\LanguageEnum;
 use Illuminate\Support\Facades\Http;
+
 class PistonApiService
 {
     const EXECUTE_ENDPOINT = '/execute';
@@ -14,17 +15,15 @@ class PistonApiService
         $this->baseUrl = env('PISTON_API_BASE_URL');
     }
 
-    function execute($sourceCode, $language)
+    function execute($sourceCode, LanguageEnum $language)
     {
-        // chuyển ngôn ngữ về dạng chuẩn
-        $language = LanguageEnum::from($language)->getLanguage();
         // tạo json để gửi lên api
         $data = [
             'language' => $language,
             'version' => '*',
             'files' => [
                 [
-                    'name' => 'main.' . $language,
+                    'name' => 'main.' . $language->getLanguage(),
                     'content' => $sourceCode
                 ]
             ]
