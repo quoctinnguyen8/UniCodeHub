@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('test_case_results', function (Blueprint $table) {
             $table->id();
-            $table->integer('submission_id')->nullable();
-            $table->integer('test_case_id')->nullable();
-            $table->text('actual_output')->nullable();
-            $table->boolean('is_passed')->nullable();
+            $table->integer('submission_id')->index()->nullable();
+            $table->integer('test_case_id')->index()->nullable();
+            $table->text('actual_output', 500)->nullable();
+            $table->boolean('is_passed')->index()->nullable();
             $table->timestamps();
         });
     }

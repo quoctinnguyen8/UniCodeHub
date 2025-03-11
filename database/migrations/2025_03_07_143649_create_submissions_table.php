@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('submissions', function (Blueprint $table) {
-            $table->id()->index();
-            $table->integer('exercise_id')->nullable();
-            $table->integer('user_id')->nullable();
-            $table->text('source_code')->nullable();
+            $table->id();
+            $table->integer('exercise_id')->index()->nullable();
+            $table->integer('user_id')->index()->nullable();
+            $table->text('source_code', 5000)->nullable();
             $table->decimal('score', 5, 2)->nullable();
             $table->timestamps();
         });
