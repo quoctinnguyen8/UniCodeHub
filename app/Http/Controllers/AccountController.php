@@ -26,7 +26,7 @@ class AccountController extends Controller
 
          if ($request->input('is_dnc_student') == 1) {
             $request->validate([
-                'email' => 'required|email|unique:users,email|max:255|ends_with:@student.dnc.edu',
+                'email' => 'required|email|unique:users,email|max:255|ends_with:@student.nctu.edu.vn',
                 'student_id' => 'required|string|max:10',
                 'class_id' => 'required|string|max:20',
             ]);
