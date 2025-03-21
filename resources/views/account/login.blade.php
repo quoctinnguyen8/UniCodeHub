@@ -23,7 +23,6 @@
                             <button type="submit" class="btn btn-info w-100 text-white">Login</button>
                         </form>
                     </div>
-                    <div class="card-footer text-center">
                     </div>
                 </div>
             </div>
