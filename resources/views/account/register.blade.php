@@ -32,25 +32,10 @@
                     <form method="POST" action="{{ route('register.post') }}">
                         @csrf
 
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Họ tên <span class="text-danger">*</span></label>
-                            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu <span class="text-danger">*</span></label>
-                            <input type="password" id="password" name="password" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="cfpassword" class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
-                            <input type="password" id="cfpassword" name="cfpassword" class="form-control" required>
-                        </div>
+                        <x-input name="name" label="Họ tên" required />
+                        <x-input name="email" type="email" label="Email" required />
+                        <x-input name="password" type="password" label="Mật khẩu" required />
+                        <x-input name="cfpassword" type="password" label="Xác nhận mật khẩu" required />
 
                         <div class="form-check mb-3">
                             <input type="checkbox" id="is_dnc_student" name="is_dnc_student" class="form-check-input" value="1" {{ old('is_dnc_student') ? 'checked' : '' }}>
@@ -58,14 +43,8 @@
                         </div>
 
                         <div id="student_fields" class="mb-3" style="display: none;">
-                            <div class="mb-3">
-                                <label for="student_id" class="form-label">Mã sinh viên <span class="text-danger">*</span></label>
-                                <input type="text" id="student_id" name="student_id" class="form-control" value="{{ old('student_id') }}">
-                            </div>
-                            <div class="mb-3">
-                                <label for="class_id" class="form-label">Mã lớp <span class="text-danger">*</span></label>
-                                <input type="text" id="class_id" name="class_id" class="form-control" value="{{ old('class_id') }}">
-                            </div>
+                            <x-input name="student_id" label="Mã sinh viên" />
+                            <x-input name="class_id" label="Mã lớp" />
                         </div>
 
                         <button type="submit" class="btn btn-info w-100 text-white">Sign Up</button>

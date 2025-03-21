@@ -18,28 +18,16 @@
                     <div class="card-body">
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror">
-                                @error('email')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror">
-                                @error('password')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+                            <x-input name="email" type="email" label="Email" />
+                            <x-input name="password" type="password" label="Password" />
                             <button type="submit" class="btn btn-info w-100 text-white">Login</button>
                         </form>
                     </div>
                     <div class="card-footer text-center">
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
- </body>
+</body>
 </html>
