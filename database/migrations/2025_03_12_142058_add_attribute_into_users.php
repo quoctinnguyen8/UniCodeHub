@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('student_id')->nullable();       
             $table->string('class_id')->nullable();          
             $table->unsignedBigInteger('role_id')->nullable()->index(); 
+            
         });
     }
 
