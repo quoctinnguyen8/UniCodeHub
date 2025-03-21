@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,22 +17,7 @@ class AccountController extends Controller
 
     public function registerPost(Request $request)
     {
-         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email|max:255',
-            'password' => 'required|min:4',
-            'cfpassword' => 'required|same:password',
-            'is_dnc_student' => 'nullable|boolean',
-        ]);
-
-         if ($request->input('is_dnc_student') == 1) {
-            $request->validate([
-                'email' => 'required|email|unique:users,email|max:255|ends_with:@student.nctu.edu.vn',
-                'student_id' => 'required|string|max:10',
-                'class_id' => 'required|string|max:20',
-            ]);
-        }
- 
+          
         $data = $request->only('name', 'email', 'password', 'is_dnc_student');
         $data['password'] = Hash::make($data['password']);
         $data['is_dnc_student'] = $request->input('is_dnc_student', 0); // Mặc định 0
@@ -55,10 +41,7 @@ class AccountController extends Controller
 
     public function loginPost(Request $request)
     {
-         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+         
 
          $credentials = $request->only('email', 'password');
 

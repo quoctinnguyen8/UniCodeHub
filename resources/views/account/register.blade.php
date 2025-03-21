@@ -10,8 +10,8 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-sm">
-                <div class="card-header bg-info text-white d-flex align-items-center justify-content-center text-center">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo" class="me-2" style="height: 40px;">
+                <div class="card-header bg-info text-white text-center">
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo" class="mb-2" style="height: 80px;">
                     <h4 class="mb-0">Register</h4>
                 </div>
                 <div class="card-body">
