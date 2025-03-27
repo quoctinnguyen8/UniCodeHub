@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class test_cases extends Model
 {
-    //
+    
 }

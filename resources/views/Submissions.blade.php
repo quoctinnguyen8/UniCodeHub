@@ -3,32 +3,58 @@
 @section('content')
     <div class="container mt-5">
         <h1 class="text-center mb-4">Nộp Bài Tập</h1>
-        <form action="#" method="POST" enctype="multipart/form-data">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="/submissionss" method="POST" class="p-3 border border-1 rounded-3">
             @csrf
             <div class="mb-3 p-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email của bạn"
-                    required>
+                <input type="email" class="form-control" id="email" placeholder="Nhập email của bạn" >
             </div>
             <div class="mb-3 p-3">
-                <label for="submission" class="form-label">Chủ Đề: </label>
-                <textarea class="form-control" id="editor" name="submission" rows="3" placeholder="Nhập bài tập của bạn"
-                    required>
+                <label for="subject" class="form-label">Chủ Đề: </label>
+                <textarea class="form-control" id="subject" rows="3" placeholder="Nhập bài tập" name="exercise_id" required>
                 </textarea>
             </div>
-            <div class="mb-3 p-3 border border-1 rounded-3">
+            <div class=" border-1 rounded-3">
                 <label for="submission" class="form-label">Bài Tập</label>
-                <textarea class="form-control" id="editor" name="submission" rows="3" placeholder="Nhập bài tập của bạn"
-                    required>
-                </textarea>
+                <div id="editor"></div>
+                <input type="hidden" id="submission" name="source_code">
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-primary p-3">Nộp Bài</button>
+                <button type="submit" id="submit" class="btn btn-primary p-3">Nộp Bài</button>
             </div>
         </form>
     </div>
 @endsection
 
 @section('js')
-    <script src="{{ asset('js/Submissions.js') }}"></script>
+    <script src="{{ asset('lib/monaco-editor/min/vs/loader.js') }}"></script>
+    <script>
+        require.config({
+            paths: {
+                'vs': '{{ asset('lib/monaco-editor/min/vs') }}'
+            }
+        });
+        require(['vs/editor/editor.main'], function() {
+            const editor = monaco.editor.create(document.getElementById('editor'), {
+                value: "// Viết mã của bạn ở đây",
+                language: 'javascript',
+                theme: 'vs-light',
+            });
+
+            document.getElementById('submit').addEventListener('click', () => { // Xử lý sự kiện click nút nộp bài
+                const code = editor.getValue();
+                document.getElementById('submission').value = code;
+            });
+        });
+    </script>
 @endsection
