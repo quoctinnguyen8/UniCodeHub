@@ -4,6 +4,47 @@
     <div class="row">
         <div class="col-12">
             <h1>Quản lý thông tin tài khoản</h1>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                Thêm người dùng
+            </button>
+            <!-- Modal thêm người dùng -->
+            <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addUserModalLabel">Thêm người dùng mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('admin.users.add') }}" method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="role" class="form-label">Vai trò</label>
+                                    <select class="form-select" id="role" name="role" required>
+                                        <option value="" disabled selected>Chọn vai trò</option>
+                                        <option value="1">Quản trị viên</option>
+                                        <option value="2">Học viên</option>
+                                    </select>
+                                </div>
+                                <x-input name="name" label="Tên" required />
+                                <x-input name="email" type="email" label="Email" required />
+                                <div class="mb-3">
+                                    <input type="checkbox" id="is_dnc_student" name="is_dnc_student" class="form-check-input" value="1">
+                                    <label for="is_dnc_student" class="form-label">Là sinh viên của trường DNC</label>
+                                </div>
+                                <x-input name="student_id" label="Mã sinh viên" placeholder="Mã sinh viên" />
+                                <x-input name="class_id" label="Mã lớp" placeholder="Mã lớp" />
+                                <x-input name="password" type="password" label="Mật khẩu" required />
+                                <x-input name="password_confirmation" type="password" label="Xác nhận mật khẩu" required />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-primary">Thêm người dùng</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <table class="table table-striped mt-4">
                 <thead>
                     <tr>
@@ -22,6 +63,10 @@
                             <td>{{ $u->user->email }}</td>
                             <td>{{ $u->active ? 'Đang hoạt động' : 'Đã chặn' }}</td>
                             <td>
+                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#editUserModal{{ $u->user->id }}">
+                                    Chỉnh sửa
+                                </button>
                                 @if ($u->active)
                                     <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                                         data-bs-target="#blockModal{{ $u->user->id }}">
@@ -35,6 +80,45 @@
                                 @endif
                             </td>
                         </tr>
+                        <!-- Modal chỉnh sửa người dùng -->
+                        <div class="modal fade" id="editUserModal{{ $u->user->id }}" tabindex="-1"
+                            aria-labelledby="editUserModalLabel{{ $u->user->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editUserModalLabel{{ $u->user->id }}">Chỉnh sửa thông tin người dùng</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="{{ route('admin.users.update', $u->user->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="editRole{{ $u->user->id }}" class="form-label">Vai trò</label>
+                                                <select class="form-select" id="editRole{{ $u->user->id }}" name="role" required>  
+                                                    <option value="1" {{ $u->user->role_id == 1 ? 'selected' : '' }}>Quản trị viên</option>
+                                                    <option value="2" {{ $u->user->role_id == 2 ? 'selected' : '' }}>Học viên</option>
+                                                </select>
+                                            </div>
+                                            <x-input name="name" label="Tên" value="{{ $u->user->name }}" required />
+                                            <x-input name="email" type="email" label="Email" value="{{ $u->user->email }}" required />
+                                            <div class="mb-3">
+                                                <input type="checkbox" id="editIsDncStudent{{ $u->user->id }}" name="is_dnc_student" class="form-check-input" value="1" {{ $u->user->is_dnc_student ? 'checked' : '' }}>
+                                                <label for="editIsDncStudent{{ $u->user->id }}" class="form-label">Là sinh viên của trường DNC</label>
+                                            </div>
+                                            <x-input name="student_id" label="Mã sinh viên" value="{{ $u->user->student_id }}" placeholder="Mã sinh viên" />
+                                            <x-input name="class_id" label="Mã lớp" value="{{ $u->user->class_id }}" placeholder="Mã lớp" />
+                                            <x-input name="password" type="password" label="Mật khẩu mới (để trống nếu không thay đổi)" />
+                                            <x-input name="password_confirmation" type="password" label="Xác nhận mật khẩu mới" />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Modal chặn -->
                         <div class="modal fade" id="blockModal{{ $u->user->id }}" tabindex="-1"
                             aria-labelledby="blockModalLabel{{ $u->user->id }}" aria-hidden="true">
@@ -79,7 +163,8 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="unblockModalLabel{{ $u->user->id }}">Xác nhận mở chặn
+                                        <h5 class="modal-title" id="unblockModalLabel{{ $u->user->id }}">Xác nhận mở
+                                            chặn
                                             người dùng
                                         </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
