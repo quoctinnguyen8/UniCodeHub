@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->nullable()->constrained('lesson_categories')->nullOnDelete();
+            $table->string('name')->unique(); //tên bài học
             $table->string('title');          
             $table->text('content');          //nội dung bài học
-            $table->foreignId('create_by')->nullable()->constrained("users")->nullOnDelete();
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('lesson_categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

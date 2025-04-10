@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lessons', function (Blueprint $table) {
+        Schema::create('lesson_categories', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('name')->unique();               //tên danh mục
+            $table->text('description')->nullable();        //mô tả
+            $table->timestamps(); 
         });
     }
 
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lessons');
+        Schema::dropIfExists('lesson_categories');
     }
 };
