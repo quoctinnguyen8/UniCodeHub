@@ -10,7 +10,7 @@
         @method('DELETE')
 
         <button type="submit" class="btn btn-danger">Xóa</button>
-        <a href="{{ route('admin.exercises.index') }}" class="btn btn-secondary">Hủy</a>
+        <a href="{{ route('exercises.index') }}" class="btn btn-secondary">Hủy</a>
     </form>
 </div>
 @endsection

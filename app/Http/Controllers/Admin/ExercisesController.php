@@ -5,46 +5,64 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Exercises;
+use App\Models\TestCase;
 
 class ExercisesController extends Controller
 {
+    /**
+     * Hiển thị danh sách bài tập kèm test case.
+     */
     public function index()
     {
-        $exercises = Exercises::all(); // Lấy danh sách bài tập
-        return view('exercises.index', compact('exercises')); // Đảm bảo đường dẫn đúng
+        $exercises = Exercises::with('testCases')->get();
+        return view('exercises.index', compact('exercises'));
     }
 
-
-
     /**
-     * Hiển thị form tạo bài tập mới.
+     * Hiển thị form tạo mới bài tập.
      */
     public function create()
-{
-    return view('exercises.create'); // Đổi lại view path
-}
+    {
+        return view('exercises.create');
+    }
+
     /**
-     * Lưu bài tập mới vào cơ sở dữ liệu.
+     * Lưu bài tập mới và các test case kèm theo.
      */
     public function store(Request $request)
     {
+        // Validate đầu vào
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
+            'new_title' => 'required|string|max:255',
+            'new_description' => 'nullable|string|max:500',
+            'variation_name.*' => 'nullable|string|max:500',
+            'variation_value.*' => 'nullable|string|max:500',
         ]);
 
-        Exercises::create($request->all());
+        // Tạo bài tập mới
+        $exercise = new Exercises();
+        $exercise->title = $request->input('new_title');
+        $exercise->description = $request->input('new_description');
+        $exercise->save();
 
-        return redirect()->route('exercises.index')->with('success', 'Thêm bài tập thành công.');
-    }
+        // Tạo test case nếu có
+        if ($request->has('variation_name') && $request->has('variation_value')) {
+            $names = $request->input('variation_name');
+            $values = $request->input('variation_value');
 
-    /**
-     * Hiển thị chi tiết bài tập (có thể bổ sung nếu cần).
-     */
-    public function show($id)
-    {
-        $exercise = Exercises::findOrFail($id);
-        return view('exercises.show', compact('exercise'));
+            foreach ($names as $index => $name) {
+                $expected = $values[$index] ?? null;
+
+                if (!empty($name) && !empty($expected)) {
+                    $exercise->testCases()->create([
+                        'input' => $name,
+                        'expected_output' => $expected,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('exercises.index')->with('success', 'Đã thêm bài tập và test case!');
     }
 
     /**
@@ -57,34 +75,46 @@ class ExercisesController extends Controller
     }
 
     /**
-     * Cập nhật thông tin bài tập.
+     * Cập nhật bài tập.
      */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:500',
         ]);
-
+    
         $exercise = Exercises::findOrFail($id);
-        $exercise->update($request->all());
-
-        return redirect()->route('exercises.index')->with('success', 'Cập nhật bài tập thành công.');
+        $exercise->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+    
+        // Cập nhật test cases
+        if ($request->has('test_cases')) {
+            foreach ($request->test_cases as $testCaseId => $data) {
+                $testCase = $exercise->testCases()->find($testCaseId);
+                if ($testCase) {
+                    $testCase->update([
+                        'input' => $data['input'] ?? '',
+                        'expected_output' => $data['expected_output'] ?? '',
+                    ]);
+                }
+            }
+        }
+    
+        return redirect()->route('exercises.index')->with('success', 'Bài tập và Test Cases đã được cập nhật thành công!');
     }
 
     /**
-     * Xóa bài tập.
+     * Xóa bài tập và test case liên quan.
      */
     public function destroy($id)
     {
-        $exercise = Exercises::find($id);
-        
-        if (!$exercise) {
-            return redirect()->route('exercises.index')->with('error', 'Bài tập không tồn tại.');
-        }
-
+        $exercise = Exercises::findOrFail($id);
+        $exercise->testCases()->delete();
         $exercise->delete();
 
-        return redirect()->route('exercises.index')->with('success', 'Xóa bài tập thành công.');
+        return redirect()->route('exercises.index')->with('success', 'Bài tập và các Test Case liên quan đã được xóa thành công.');
     }
 }
