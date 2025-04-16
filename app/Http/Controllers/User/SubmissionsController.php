@@ -24,7 +24,7 @@ class SubmissionsController extends Controller
         $data = $request->all();
         unset($data['_token']);
 
-        $data['user_id'] = Auth::id() ?? 2;
+        $data['user_id'] = Auth::id() ?? 2; //lay id cua user dang nhap
         $data['score'] = 0;
         Submissions::create($data);
         return view('submissions');

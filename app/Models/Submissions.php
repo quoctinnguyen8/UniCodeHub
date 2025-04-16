@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Submissions extends Model
 {
     protected $table = 'submissions';
-    protected $fillable = ['exercise_id', 'user_id', 'source_code', 'score', 'title', 'description', 'file_path'];
+    protected $fillable = ['exercise_id', 'user_id', 'source_code', 'score', 
+    'language'];
 }
