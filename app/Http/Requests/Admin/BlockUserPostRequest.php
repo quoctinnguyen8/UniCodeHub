@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginPostRequest extends FormRequest
+class BlockUserPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,16 +22,14 @@ class LoginPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required',
+             'block_until' => 'required|numeric|min:1'
         ];
     }
-    // thêm cái field
     public function attributes(): array
     {
         return [
-            'email' => 'Email',
-            'password' => 'Mật khẩu',
+            'block_until' => 'Block Until'
         ];
     }
+    
 }

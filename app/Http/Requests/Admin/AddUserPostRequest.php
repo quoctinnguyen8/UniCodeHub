@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-class RegisterPostRequest extends FormRequest
+
+class AddUserPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    // tạo validate request cho registerPost
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -31,22 +31,28 @@ class RegisterPostRequest extends FormRequest
                 Rule::unique('users', 'email'),
                 'ends_with:@student.nctu.edu.vn'
             ],
-            'password' => 'required|min:4',
-            'cfpassword' => 'required|same:password',
-            'is_dnc_student' => 'boolean',
+            'password' => 'required|string|min:4|confirmed',
+            'is_dnc_student' => 'nullable|boolean',
+            'student_id' => 'nullable|string|max:255',
+            'class_id' => 'nullable|string|max:255',
+            'role' => [
+                'required',
+                'integer',
+                Rule::in([1, 2]), // Assuming 1 is for admin and 2 is for user
+            ]
         ];
     }
-    
-    // thêm cái field
     public function attributes(): array
     {
         return [
             'name' => 'Tên',
             'email' => 'Email',
             'password' => 'Mật khẩu',
-            'cfpassword' => 'Xác nhận mật khẩu',
-            'is_dnc_student' => 'Sinh viên DNC'
+            'password_confirmation' => 'Xác nhận mật khẩu',
+            'is_dnc_student' => 'Sinh viên DNC',
+            'student_id' => 'Mã sinh viên',
+            'class_id' => 'Lớp',
+            'role' => 'Quyền'
         ];
     }
-
 }
